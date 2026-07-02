@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Caisse Chantier - SCI EPSILON</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f5f2ee;color:#222}
+.topbar{background:#3C3632;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:58px}
+.tb-left{display:flex;align-items:center;gap:14px}
+.tb-logo{height:42px;object-fit:contain}
+.tb-info{border-left:1px solid rgba(255,255,255,.2);padding-left:14px}
+.tb-title{font-size:14px;font-weight:700;color:#fff}
+.tb-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:1px}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tdate{font-size:11px;color:rgba(255,255,255,.35)}
+.btn-te{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;padding:7px 16px;border-radius:8px;cursor:pointer;border:none;background:#A5532A;color:#fff}
+.btn-te:hover{background:#8B3E1C}
+.btn-gn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:6px 13px;border-radius:7px;cursor:pointer;border:none;background:#1a6b20;color:#fff}
+.btn-gn:hover{background:#145216}
+.sol-strip{background:#F8EFD9;border-bottom:2px solid #E8DFC6;padding:9px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sol-strip label{font-size:13px;font-weight:700;color:#3C3632}
+.sol-inp{width:160px;font-size:14px;padding:5px 10px;height:32px;border:1.5px solid #E8DFC6;border-radius:7px;background:#fff;outline:none;font-weight:700;color:#3C3632}
+.sol-inp:focus{border-color:#A5532A}
+.sol-unit{font-size:13px;font-weight:700;color:#A5532A}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 20px;background:#fff;border-bottom:1px solid #e5e0d8}
+.kpi{background:#fff;border:1px solid #e5e0d8;border-radius:10px;padding:10px 14px}
+.kpi.k0{border-left:4px solid #A5532A}.kpi.k1{border-left:4px solid #1B5E20}.kpi.k2{border-left:4px solid #B71C1C}.kpi.k3{border-left:4px solid #3C3632}
+.kpi-lbl{font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.kpi-val{font-size:15px;font-weight:700;color:#3C3632;font-variant-numeric:tabular-nums}
+.kpi-val.g{color:#1B5E20}.kpi-val.r{color:#B71C1C}.kpi-val.te{color:#A5532A}
+.form-panel{background:#fff;border-bottom:1px solid #e5e0d8;padding:12px 20px}
+.type-row{display:flex;gap:8px;margin-bottom:10px}
+.tpill{flex:1;padding:8px;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;text-align:center;background:#f9f7f5;color:#999;text-transform:uppercase;letter-spacing:.04em}
+.tpill.ain{background:#e8f5e9;color:#1B5E20;border-color:#a5d6a7}
+.tpill.aout{background:#ffebee;color:#B71C1C;border-color:#ef9a9a}
+.fg{display:grid;grid-template-columns:130px 1fr 1fr 150px auto;gap:8px;align-items:end}
+.fi label{display:block;font-size:10px;color:#666;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.fi input{width:100%;font-size:13px;padding:7px 10px;height:34px;border:1.5px solid #ddd;border-radius:7px;background:#fafafa;color:#222;outline:none}
+.fi input:focus{border-color:#A5532A;background:#fff}
+.ferr{font-size:12px;color:#B71C1C;margin-top:6px;display:none;font-weight:600;padding:6px 10px;background:#fff5f5;border-radius:5px}
+.tw{overflow-x:auto;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f5f2ee;color:#666;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:8px 10px;text-align:left;border-bottom:2px solid #e0dbd5;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid #f0ece8;vertical-align:middle}
+tr:hover td{background:#fdf9f6}
+tr.ouv td{background:#fef7ee;font-style:italic}
+.gv{color:#1B5E20;font-weight:700;font-variant-numeric:tabular-nums}
+.rv{color:#B71C1C;font-weight:700;font-variant-numeric:tabular-nums}
+.sv{font-weight:700;font-variant-numeric:tabular-nums;color:#3C3632}
+.sv.neg{color:#B71C1C}
+.mu{color:#ccc}
+.acts{display:flex;gap:4px;flex-wrap:wrap}
+.bsm{font-size:11px;font-weight:600;padding:4px 8px;border-radius:5px;cursor:pointer;border:1px solid #ddd;background:#fff;display:inline-flex;align-items:center;gap:3px}
+.bsm:hover{background:#f5f5f5}
+.bsm.grec{color:#1B5E20;border-color:#c5e8c5}.bsm.grec:hover{background:#f0faf0}
+.bsm.rrec{color:#B71C1C;border-color:#f5c6c6}.bsm.rrec:hover{background:#fff5f5}
+.bsm.pj{color:#A5532A;border-color:#e8d5c6}.bsm.pj:hover{background:#fdf5f0}
+.bsm.del{color:#B71C1C;border-color:#f5c6c6;font-weight:700}.bsm.del:hover{background:#ffebee}
+.pj-badge{background:#A5532A;color:#fff;font-size:9px;font-weight:700;border-radius:9px;padding:1px 5px;margin-left:2px}
+.pj-note{font-size:10px;color:#A5532A;margin-top:2px}
+.empty{padding:36px;text-align:center;color:#bbb;font-size:14px;background:#fff}
+.mb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;padding:16px}
+.mb.open{display:flex}
+.mbox{background:#fff;border-radius:14px;width:520px;max-width:96%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2)}
+.mh{padding:13px 18px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;border-radius:14px 14px 0 0}
+.mh h3{font-size:14px;font-weight:700;color:#3C3632;margin:0}
+.mx{background:none;border:none;cursor:pointer;font-size:22px;color:#aaa;padding:2px 6px;border-radius:4px;line-height:1}
+.mx:hover{background:#f5f5f5}
+.rpw{padding:22px 24px;font-family:Arial,sans-serif}
+.ep-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:14px;border-bottom:2.5px solid #3C3632;margin-bottom:16px;gap:16px}
+.ep-logo{height:72px;object-fit:contain;flex-shrink:0}
+.ep-right{text-align:right}
+.ep-co{font-size:17px;font-weight:800;color:#3C3632}
+.ep-tag{font-size:9.5px;color:#A5532A;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-top:2px}
+.ep-addr{font-size:10px;color:#555;line-height:1.8;margin-top:6px}
+.r-badge{display:block;text-align:center;margin:14px 0 3px}
+.r-badge span{background:#3C3632;color:#fff;font-size:12px;font-weight:700;padding:6px 24px;border-radius:20px;letter-spacing:.08em;text-transform:uppercase}
+.r-num{text-align:center;font-size:11px;color:#888;margin-bottom:16px}
+.r-sec{margin-bottom:14px}
+.r-sec-t{font-size:9.5px;font-weight:800;color:#A5532A;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;padding-bottom:3px;border-bottom:1.5px solid #E8DFC6}
+.rrow{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:.5px solid #f5f0eb}
+.rrow:last-child{border:none}
+.rl{color:#777;font-size:11.5px;min-width:120px}
+.rv2{font-weight:600;color:#111;font-size:11.5px;text-align:right}
+.r-tot{background:#F8EFD9;border:2px solid #E8DFC6;border-radius:9px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin:16px 0}
+.r-tot-l{font-size:11px;font-weight:700;color:#3C3632;text-transform:uppercase;letter-spacing:.06em}
+.r-tot-v{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.r-tot-v.in{color:#1B5E20}.r-tot-v.out{color:#B71C1C}
+.r-lett{font-size:11px;color:#444;font-style:italic;padding:8px 12px;background:#fafaf8;border-left:4px solid #A5532A;border-radius:0 6px 6px 0;margin-bottom:16px;line-height:1.6}
+.r-lett strong{font-style:normal;color:#3C3632}
+.r-sig{display:flex;gap:8px;margin-top:20px}
+.r-sig-b{flex:1;text-align:center}
+.r-sig-l{height:30px;border-bottom:1.5px solid #999;margin:0 8px 4px}
+.r-sig-t{font-size:9.5px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.r-foot{margin-top:16px;padding-top:10px;border-top:1.5px dashed #E8DFC6;text-align:center;font-size:9px;color:#aaa;line-height:1.6}
+.r-acts{display:flex;gap:8px;margin:14px 0 4px}
+.r-acts button{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+.r-pdf{background:#A5532A;color:#fff}.r-pdf:hover{background:#8B3E1C}
+.r-prt{background:#3C3632;color:#fff}.r-prt:hover{background:#5C4E48}
+.pj-zone{padding:16px 18px}
+.pj-drop{border:2.5px dashed #E8DFC6;border-radius:10px;padding:22px;text-align:center;cursor:pointer;background:#fdf8f4;margin-bottom:12px}
+.pj-drop:hover{border-color:#A5532A;background:#fdf0e8}
+.pj-pg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.pj-it{border:1px solid #eee;border-radius:7px;overflow:hidden;position:relative;background:#fafafa}
+.pj-it img{width:100%;height:80px;object-fit:cover;display:block}
+.pj-it-n{font-size:10px;color:#666;padding:3px 5px;background:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pj-it-del{position:absolute;top:3px;right:3px;background:rgba(176,0,0,.85);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+@media print{
+  body{background:#fff}
+  .topbar,.sol-strip,.kpi-row,.form-panel,.tw,.empty,.mh,.r-acts{display:none!important}
+  .mb{position:static;background:none;padding:0;display:block}
+  .mbox{box-shadow:none;border:none;width:100%;max-height:none;border-radius:0}
+  .rpw{padding:0}
+}
+</style>
+<body>
+
+<div class="topbar">
+  <div class="tb-left">
+    <img id="tb-logo" class="tb-logo" alt="EPSILON">
+    <div class="tb-info">
+      <div class="tb-title">SCI EPSILON &mdash; Caisse Chantier</div>
+      <div class="tb-sub">R&eacute;sidences Blue &amp; Green &nbsp;&middot;&nbsp; Almadies, Dakar</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <span class="tdate" id="dn"></span>
+    <button class="btn-gn" id="btn-xl">&#11015; Export Excel</button>
+  </div>
+</div>
+
+<div class="sol-strip">
+  <label>Solde d&rsquo;ouverture :</label>
+  <input type="number" id="sinit" class="sol-inp" value="0" min="0" placeholder="0">
+  <span class="sol-unit">FCFA</span>
+  <small>&mdash; Saisir avant la premi&egrave;re op&eacute;ration</small>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi k0"><div class="kpi-lbl">Solde ouverture</div><div class="kpi-val te" id="ki">0 FCFA</div></div>
+  <div class="kpi k1"><div class="kpi-lbl">Total encaiss&eacute;</div><div class="kpi-val g" id="kin">0 FCFA</div></div>
+  <div class="kpi k2"><div class="kpi-lbl">Total d&eacute;caiss&eacute;</div><div class="kpi-val r" id="kout">0 FCFA</div></div>
+  <div class="kpi k3"><div class="kpi-lbl">Solde actuel</div><div class="kpi-val" id="ksol">0 FCFA</div></div>
+</div>
+
+<div class="form-panel">
+  <div class="type-row">
+    <div class="tpill ain" id="pin" id="pill-in">&#9660; ENCAISSEMENT (RECETTE)</div>
+    <div class="tpill" id="pill-out">&#9650; D&Eacute;CAISSEMENT</div>
+  </div>
+  <div class="fg">
+    <div class="fi"><label>Date</label><input type="date" id="fd"></div>
+    <div class="fi"><label>Libell&eacute;</label><input type="text" id="fl" placeholder="Ex : Achat ciment..."></div>
+    <div class="fi"><label>B&eacute;n&eacute;ficiaire</label><input type="text" id="fb" placeholder="Ex : BATISAHEL"></div>
+    <div class="fi"><label>Montant (FCFA)</label><input type="number" id="fm" placeholder="0" min="1"></div>
+    <button class="btn-te" id="btn-add">+ Ajouter</button>
+  </div>
+  <div class="ferr" id="ferr"></div>
+</div>
+
+<div class="tw">
+  <table>
+    <thead><tr>
+      <th style="width:28px">#</th>
+      <th>Date</th><th>Libell&eacute;</th><th>B&eacute;n&eacute;ficiaire</th>
+      <th style="text-align:right">Encaiss&eacute; (FCFA)</th>
+      <th style="text-align:right">D&eacute;caiss&eacute; (FCFA)</th>
+      <th style="text-align:right">Solde (FCFA)</th>
+      <th style="min-width:240px">Actions</th>
+    </tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+  <div class="empty" id="emp">
+    <div style="font-size:32px;margin-bottom:8px">&#128194;</div>
+    Aucune op&eacute;ration &mdash; remplissez le formulaire ci-dessus
+  </div>
+</div>
+
+<div class="mb" id="mod-recu">
+  <div class="mbox">
+    <div class="mh">
+      <h3 id="recu-title">Re&ccedil;u</h3>
+      <button class="mx" id="close-recu">&times;</button>
+    </div>
+    <div class="rpw" id="recu-body"></div>
+  </div>
+</div>
+
+<div class="mb" id="mod-pj">
+  <div class="mbox" style="width:400px">
+    <div class="mh">
+      <h3 id="pj-title">Pi&egrave;ces jointes</h3>
+      <button class="mx" id="close-pj">&times;</button>
+    </div>
+    <div class="pj-zone">
+      <div class="pj-drop" id="pj-drop">
+        <p style="font-size:13px;color:#A5532A;font-weight:700;margin-bottom:4px">&#128193; Cliquer pour ajouter des fichiers</p>
+        <small style="font-size:11px;color:#aaa">Images, PDF &mdash; plusieurs fichiers accept&eacute;s</small>
+        <input type="file" id="pj-inp" multiple accept="image/*,.pdf" style="display:none">
+      </div>
+      <div class="pj-pg" id="pj-pg"></div>
+      <div style="text-align:right;margin-top:14px">
+        <button class="btn-te" id="close-pj2">&#10003; Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+(function() {
+  /* ── Logos ─────────────────────────────────────────────────────── */
+  var LTOP = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAA3AE0DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD7LooooAKKKKACiuB+J3xHt/B9/Z6RDp1xeaneoZIFWJ5ECLksWWIPL0BAIQjJGSK3fh74t0/xt4ah17TIbiG3lYrsnCh1YdQQrHBB4wcH1AoA6GiiigAooooAKKKKACsnxnrcXhvwjrHiGdPMi02xmu2TONwjQtj8cYrWrJ8YaPb+I/C2reHbmTZFqVlNauw5KrIhXdj2zn8KAOE8Gvo3w/8AAkfjHxnfx/27rYiudVv3UtLLNIAwhQDJ8uMHaqLwFUnGcmmeLfsfhnxr4b8e+HZYhY+Ir+DS9ZjgYeTeLOCLe544MiPtXf1KOQc4GNDwlbaZ4z8Bw+FPGemwy6rpSRW2p2UpIZZYwAsyEYPlyAblccEMR1DAR+MLaDxL4t8N+ENHhjFhoWoQ6pqskKgRWwgBNvb8cb2cq23+FEJONy5lc3M77Fvk5Fa/N+B6QKKRWBzgg4ODj1paogKKKKACiiigAJABJ6Cuc1zWPCy2sGoajdLGm1WhuEVwwV+m1kGcH+fFdFICyMqttJBAPp71iw6PqMdrYxf23IXgDiZvIUCbKsBx2wSD74qZOXQ0gofa/r8GYly3gzVL9RcahdT3NrcNaB1nmjkik/iTzFw2OOmcdKsaI3hNdKgj0zUJksXi82KOOWSMMpwc8YYk7xnPPPPetKLR9VUQeZr0kjRNAzMYFG/YCJOnA35JJHIyR04p1po15DFEH1meaSNAu94U5O8kkADA4IX6AdalOf8AX/DlONLo/wCvuF0HVtBnePTtJljBMLTpGkRUFBIUZun94H3PWtmsfStK1GzuoJZ9akuYkgaOSIwKodyxO/I5BwcYyc4z1rYqo3tqRNRT93+vyCiiiqICiiigAooooAKKKKACiiigAooooA//2Q==";
+  var LREC = "data:image/jpeg;base64,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";
+  document.getElementById("tb-logo").src = LTOP;
+
+  /* ── État ──────────────────────────────────────────────────────── */
+  var ops    = [];
+  var ctype  = "in";
+  var ctr    = 1;
+  var curPJ  = null;
+  var now    = new Date();
+
+  document.getElementById("dn").textContent =
+    now.toLocaleDateString("fr-FR", {weekday:"short",day:"numeric",month:"long",year:"numeric"});
+  document.getElementById("fd").value = now.toISOString().split("T")[0];
+
+  /* ── Utilitaires ───────────────────────────────────────────────── */
+  function fmt(n) {
+    return new Intl.NumberFormat("fr-FR").format(Math.round(n));
+  }
+  function fdate(s) {
+    if (!s) return "";
+    var p = s.split("-");
+    return p[2] + "/" + p[1] + "/" + p[0];
+  }
+  function getInit() {
+    var v = parseFloat(document.getElementById("sinit").value);
+    return isNaN(v) ? 0 : v;
+  }
+  function el(id) { return document.getElementById(id); }
+
+  function enLettres(n) {
+    var u = ["","un","deux","trois","quatre","cinq","six","sept","huit","neuf",
+             "dix","onze","douze","treize","quatorze","quinze","seize",
+             "dix-sept","dix-huit","dix-neuf"];
+    var d = ["","","vingt","trente","quarante","cinquante","soixante",
+             "soixante","quatre-vingt","quatre-vingt"];
+    function cent(x) {
+      if (x < 20) return u[x];
+      var di = Math.floor(x/10), un = x%10;
+      if (di===7||di===9) return d[di]+(un===0?"-dix":"-"+u[10+un]);
+      return d[di]+(un?"-"+u[un]:"");
+    }
+    function mille(x) {
+      if (x < 100) return cent(x);
+      var c=Math.floor(x/100), r=x%100;
+      return (c>1?u[c]+"-cent":"cent")+(r?"-"+cent(r):"");
+    }
+    if (n===0) return "Z\u00e9ro";
+    var r="";
+    if (n>=1000000){var m=Math.floor(n/1000000);r+=mille(m)+" million"+(m>1?"s":"")+" ";n%=1000000;}
+    if (n>=1000){var k=Math.floor(n/1000);r+=(k>1?mille(k)+" ":"")+"mille ";n%=1000;}
+    if (n>0) r+=mille(n);
+    r=r.trim();
+    return r.charAt(0).toUpperCase()+r.slice(1)+" francs CFA";
+  }
+
+  /* ── Type de saisie ────────────────────────────────────────────── */
+  el("pill-in").addEventListener("click", function() {
+    ctype = "in";
+    el("pill-in").className  = "tpill ain";
+    el("pill-out").className = "tpill";
+  });
+  el("pill-out").addEventListener("click", function() {
+    ctype = "out";
+    el("pill-in").className  = "tpill";
+    el("pill-out").className = "tpill aout";
+  });
+
+  /* ── Solde ouverture ───────────────────────────────────────────── */
+  el("sinit").addEventListener("input", render);
+
+  /* ── Ajouter opération ─────────────────────────────────────────── */
+  el("btn-add").addEventListener("click", function() {
+    var date = el("fd").value;
+    var lib  = el("fl").value.trim();
+    var ben  = el("fb").value.trim();
+    var mnt  = parseFloat(el("fm").value);
+    var err  = el("ferr");
+    if (!date || !lib || !ben || isNaN(mnt) || mnt <= 0) {
+      err.textContent = "Tous les champs sont obligatoires et le montant doit \u00eatre > 0.";
+      err.style.display = "block";
+      return;
+    }
+    err.style.display = "none";
+    ops.push({id:ctr++, date:date, lib:lib, ben:ben, type:ctype, mnt:mnt, pj:[]});
+    ops.sort(function(a,b){return a.date.localeCompare(b.date);});
+    el("fl").value = "";
+    el("fb").value = "";
+    el("fm").value = "";
+    render();
+  });
+
+  /* ── Export Excel ──────────────────────────────────────────────── */
+  el("btn-xl").addEventListener("click", exportXL);
+
+  /* ── Fermer modals ─────────────────────────────────────────────── */
+  el("close-recu").addEventListener("click",  function(){closeMod("mod-recu");});
+  el("close-pj").addEventListener("click",    function(){closeMod("mod-pj");});
+  el("close-pj2").addEventListener("click",   function(){closeMod("mod-pj");});
+  el("mod-recu").addEventListener("click",    function(e){if(e.target===el("mod-recu"))closeMod("mod-recu");});
+  el("mod-pj").addEventListener("click",      function(e){if(e.target===el("mod-pj"))closeMod("mod-pj");});
+
+  /* ── Pièces jointes drop zone ──────────────────────────────────── */
+  el("pj-drop").addEventListener("click", function(){el("pj-inp").click();});
+  el("pj-inp").addEventListener("change", function(){handleFiles(this);});
+
+  /* ── Supprimer opération ───────────────────────────────────────── */
+  function delOp(id) {
+    if (!confirm("Supprimer d\u00e9finitivement cette ligne ?")) return;
+    ops = ops.filter(function(o){return o.id !== id;});
+    render();
+  }
+
+  /* ── Render tableau ────────────────────────────────────────────── */
+  function render() {
+    var init   = getInit();
+    var tb     = el("tb");
+    var emp    = el("emp");
+    tb.innerHTML = "";
+    var solde = init, totIn = 0, totOut = 0;
+    emp.style.display = ops.length === 0 ? "block" : "none";
+
+    /* ligne solde ouverture */
+    var tr0 = document.createElement("tr");
+    tr0.className = "ouv";
+    tr0.innerHTML =
+      "<td class='mu' style='font-size:10px'>&#8212;</td>" +
+      "<td>" + now.toLocaleDateString("fr-FR") + "</td>" +
+      "<td><em>Solde d'ouverture</em></td>" +
+      "<td class='mu'>&#8212;</td>" +
+      "<td style='text-align:right'><span class='gv'>" + fmt(init) + "</span></td>" +
+      "<td style='text-align:right'><span class='mu'>&#8212;</span></td>" +
+      "<td style='text-align:right'><span class='sv'>" + fmt(init) + "</span></td>" +
+      "<td></td>";
+    tb.appendChild(tr0);
+
+    for (var i = 0; i < ops.length; i++) {
+      var op = ops[i];
+      if (op.type === "in") { solde += op.mnt; totIn += op.mnt; }
+      else                  { solde -= op.mnt; totOut += op.mnt; }
+
+      var sc   = "sv" + (solde < 0 ? " neg" : "");
+      var pjc  = op.pj ? op.pj.length : 0;
+      var encC = op.type==="in"
+        ? "<span class='gv'>" + fmt(op.mnt) + "</span>"
+        : "<span class='mu'>&#8212;</span>";
+      var decC = op.type==="out"
+        ? "<span class='rv'>" + fmt(op.mnt) + "</span>"
+        : "<span class='mu'>&#8212;</span>";
+
+      var pjNote = pjc > 0
+        ? "<div class='pj-note'>&#128206; " + pjc + " fichier(s)</div>"
+        : "";
+      var pjBadge = pjc > 0
+        ? "<span class='pj-badge'>" + pjc + "</span>"
+        : "";
+
+      var recClass = op.type === "in" ? "bsm grec" : "bsm rrec";
+      var recLabel = op.type === "in" ? "&#129534; Recu Recette" : "&#129534; Recu Decaiss.";
+
+      var tr = document.createElement("tr");
+      tr.dataset.id = op.id;
+      tr.innerHTML =
+        "<td class='mu' style='font-size:10px'>" + (i+1) + "</td>" +
+        "<td style='white-space:nowrap'>" + fdate(op.date) + "</td>" +
+        "<td>" + op.lib + pjNote + "</td>" +
+        "<td>" + op.ben + "</td>" +
+        "<td style='text-align:right'>" + encC + "</td>" +
+        "<td style='text-align:right'>" + decC + "</td>" +
+        "<td style='text-align:right'><span class='" + sc + "'>" + fmt(solde) + "</span></td>" +
+        "<td><div class='acts'>" +
+          "<button class='" + recClass + "' data-op='" + op.id + "' data-rtype='" + op.type + "'>" + recLabel + "</button>" +
+          "<button class='bsm pj' data-pj='" + op.id + "'>&#128206; PJ" + pjBadge + "</button>" +
+          "<button class='bsm del' data-del='" + op.id + "'>&#128465; Suppr.</button>" +
+        "</div></td>";
+      tb.appendChild(tr);
+    }
+
+    /* délégation des clics sur le tbody */
+    tb.onclick = function(e) {
+      var t = e.target.closest("button");
+      if (!t) return;
+      var opId = t.dataset.op  ? parseInt(t.dataset.op)  : null;
+      var pjId = t.dataset.pj  ? parseInt(t.dataset.pj)  : null;
+      var delId= t.dataset.del ? parseInt(t.dataset.del) : null;
+      if (opId !== null) openRecu(opId, t.dataset.rtype);
+      if (pjId !== null) openPJ(pjId);
+      if (delId!== null) delOp(delId);
+    };
+
+    el("ki").textContent   = fmt(init)   + " FCFA";
+    el("kin").textContent  = fmt(totIn)  + " FCFA";
+    el("kout").textContent = fmt(totOut) + " FCFA";
+    var fs = init + totIn - totOut;
+    var ks = el("ksol");
+    ks.textContent = fmt(fs) + " FCFA";
+    ks.className   = "kpi-val" + (fs < 0 ? " r" : "");
+  }
+
+  /* ── Solde à un instant donné ──────────────────────────────────── */
+  function getSoldeAt(id) {
+    var s = getInit();
+    for (var i = 0; i < ops.length; i++) {
+      var op = ops[i];
+      if (op.type === "in") s += op.mnt; else s -= op.mnt;
+      if (op.id === id) return s;
+    }
+    return s;
+  }
+
+  /* ── Ouvrir reçu ───────────────────────────────────────────────── */
+  function openRecu(id, type) {
+    var op = null;
+    for (var i = 0; i < ops.length; i++) { if (ops[i].id === id) {op = ops[i]; break;} }
+    if (!op) return;
+
+    var isIn   = (type === "in");
+    var num    = (isIn ? "REC" : "DEC") + "-" + ("000"+op.id).slice(-4);
+    var tdoc   = isIn ? "RECU DE RECETTE" : "RECU DE DECAISSEMENT";
+    var sigLbl = isIn ? "Emetteur / Versant" : "Beneficiaire";
+    var totLbl = isIn ? "Montant recu" : "Montant decaisse";
+
+    el("recu-title").textContent = tdoc + " — " + num;
+
+    var pjH = "";
+    if (op.pj && op.pj.length > 0) {
+      var imgs = op.pj.filter(function(p){return p.type && p.type.indexOf("image")===0;});
+      if (imgs.length > 0) {
+        pjH = "<div style='margin-top:14px;padding-top:10px;border-top:1px dashed #E8DFC6'>" +
+              "<div style='font-size:9.5px;font-weight:800;color:#A5532A;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px'>Pieces jointes (" + op.pj.length + ")</div>" +
+              "<div style='display:grid;grid-template-columns:repeat(3,1fr);gap:6px'>";
+        for (var j=0;j<imgs.length;j++) {
+          pjH += "<div style='border:1px solid #E8DFC6;border-radius:5px;overflow:hidden'>" +
+                 "<img src='" + imgs[j].data + "' style='width:100%;height:70px;object-fit:cover;display:block'>" +
+                 "<div style='font-size:9px;color:#888;padding:2px 4px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis'>" + imgs[j].name + "</div></div>";
+        }
+        pjH += "</div></div>";
+      }
+    }
+
+    el("recu-body").innerHTML =
+      "<div id='rp'>" +
+        "<div class='ep-hdr'>" +
+          "<img src='" + LREC + "' class='ep-logo' alt='EPSILON'>" +
+          "<div class='ep-right'>" +
+            "<div class='ep-co'>SCI EPSILON</div>" +
+            "<div class='ep-tag'>L'IMMOBILIER D'EXCEPTION</div>" +
+            "<div class='ep-addr'>Lot 9, Zone 14 — Résidence PALMAS · Almadies, Dakar, Sénégal<br>Tél : +221 33 820 60 05 · epsilon@epsilon.sn<br>NINEA : 006536497 · www.epsilon.sn</div>" +
+          "</div>" +
+        "</div>" +
+        "<div class='r-badge'><span>" + tdoc + "</span></div>" +
+        "<div class='r-num'>N° " + num + " · Caisse Chantier · Résidences Blue &amp; Green</div>" +
+        "<div class='r-sec'>" +
+          "<div class='r-sec-t'>Informations de l'opération</div>" +
+          "<div class='rrow'><span class='rl'>Date</span><span class='rv2'>" + fdate(op.date) + "</span></div>" +
+          "<div class='rrow'><span class='rl'>N° de pièce</span><span class='rv2'>" + num + "</span></div>" +
+          "<div class='rrow'><span class='rl'>Libellé</span><span class='rv2'>" + op.lib + "</span></div>" +
+          "<div class='rrow'><span class='rl'>" + sigLbl + "</span><span class='rv2'>" + op.ben + "</span></div>" +
+        "</div>" +
+        "<div class='r-tot'>" +
+          "<span class='r-tot-l'>" + totLbl + "</span>" +
+          "<span class='r-tot-v " + (isIn?"in":"out") + "'>" + fmt(op.mnt) + " FCFA</span>" +
+        "</div>" +
+        "<div class='r-lett'>Arrêtée à la somme de : <strong>" + enLettres(op.mnt) + "</strong></div>" +
+        "<div class='r-sig'>" +
+          "<div class='r-sig-b'><div class='r-sig-l'></div><div class='r-sig-t'>Gestionnaire de caisse</div></div>" +
+          "<div class='r-sig-b'><div class='r-sig-l'></div><div class='r-sig-t'>Visa RAF</div></div>" +
+          "<div class='r-sig-b'><div class='r-sig-l'></div><div class='r-sig-t'>" + sigLbl + "</div></div>" +
+        "</div>" +
+        pjH +
+        "<div class='r-foot'>Document officiel — SCI EPSILON · Caisse Chantier<br>Ce reçu vaut pièce justificative de caisse</div>" +
+      "</div>" +
+      "<div class='r-acts'>" +
+        "<button class='r-pdf' id='btn-pdf'>&#11015; Télécharger PDF</button>" +
+        "<button class='r-prt' id='btn-prt'>&#128424; Imprimer</button>" +
+      "</div>";
+
+    el("btn-pdf").addEventListener("click", function(){dlPDF(num);});
+    el("btn-prt").addEventListener("click", function(){window.print();});
+    el("mod-recu").classList.add("open");
+  }
+
+  /* ── Télécharger PDF ───────────────────────────────────────────── */
+  function dlPDF(num) {
+    var rpEl = el("rp");
+    html2canvas(rpEl, {scale:2, useCORS:true, backgroundColor:"#ffffff"}).then(function(canvas) {
+      var img = canvas.toDataURL("image/jpeg", 0.95);
+      var pdf = new window.jspdf.jsPDF("p","mm","a4");
+      var pw  = pdf.internal.pageSize.getWidth();
+      var ph  = pdf.internal.pageSize.getHeight();
+      var ratio = canvas.height / canvas.width;
+      var iw  = pw - 20;
+      var ih  = iw * ratio;
+      if (ih > ph - 20) { ih = ph - 20; iw = ih / ratio; }
+      var x = (pw - iw) / 2;
+      pdf.addImage(img, "JPEG", x, 10, iw, ih);
+      pdf.save("EPS_" + num + "_" + new Date().toISOString().split("T")[0] + ".pdf");
+    });
+  }
+
+  /* ── Pièces jointes ────────────────────────────────────────────── */
+  function openPJ(id) {
+    curPJ = id;
+    var op = null;
+    for (var i=0;i<ops.length;i++){if(ops[i].id===id){op=ops[i];break;}}
+    el("pj-title").textContent = "Pièces jointes — " + (op?op.lib.substring(0,28):"");
+    renderPJPreview(op);
+    el("mod-pj").classList.add("open");
+  }
+
+  function handleFiles(inp) {
+    var op = null;
+    for (var i=0;i<ops.length;i++){if(ops[i].id===curPJ){op=ops[i];break;}}
+    if (!op) return;
+    var files = Array.from(inp.files);
+    var loaded = 0;
+    files.forEach(function(file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        op.pj.push({name:file.name, type:file.type, data:e.target.result});
+        loaded++;
+        if (loaded===files.length){renderPJPreview(op);render();}
+      };
+      reader.readAsDataURL(file);
+    });
+    inp.value = "";
+  }
+
+  function renderPJPreview(op) {
+    var pg = el("pj-pg");
+    pg.innerHTML = "";
+    if (!op||!op.pj) return;
+    op.pj.forEach(function(pj,i){
+      var div = document.createElement("div");
+      div.className = "pj-it";
+      var icon = (pj.type&&pj.type.indexOf("image")===0)
+        ? "<img src='" + pj.data + "' alt='" + pj.name + "'>"
+        : "<div style='height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:#f0ece8'>&#128196;</div>";
+      div.innerHTML = icon +
+        "<div class='pj-it-n'>" + pj.name + "</div>" +
+        "<button class='pj-it-del' data-idx='" + i + "'>&times;</button>";
+      pg.appendChild(div);
+    });
+    pg.onclick = function(e) {
+      var b = e.target.closest("button");
+      if (!b||!b.dataset.idx) return;
+      var idx = parseInt(b.dataset.idx);
+      var op2=null;for(var i=0;i<ops.length;i++){if(ops[i].id===curPJ){op2=ops[i];break;}}
+      if (!op2) return;
+      op2.pj.splice(idx,1);
+      renderPJPreview(op2);
+      render();
+    };
+  }
+
+  /* ── Fermer modal ──────────────────────────────────────────────── */
+  function closeMod(id) { el(id).classList.remove("open"); }
+
+  /* ── Export Excel ──────────────────────────────────────────────── */
+  function exportXL() {
+    var init = getInit();
+    var wb   = XLSX.utils.book_new();
+    var ds   = now.toLocaleDateString("fr-FR");
+    var data = [
+      ["SCI EPSILON — REGISTRE CAISSE CHANTIER"],
+      ["Résidences Blue & Green · Almadies, Dakar, Sénégal"],
+      ["Date extraction : " + ds],
+      [],
+      ["N°","Date","Libellé","Bénéficiaire","Encaissé (FCFA)","Décaissé (FCFA)","Solde (FCFA)","Pièces jointes"],
+      ["—","Solde d'ouverture","—","—",init,"",init,""]
+    ];
+    var solde=init, totIn=0, totOut=0;
+    ops.forEach(function(op,i){
+      var enc=op.type==="in"?op.mnt:"";
+      var dec=op.type==="out"?op.mnt:"";
+      if(op.type==="in"){solde+=op.mnt;totIn+=op.mnt;}else{solde-=op.mnt;totOut+=op.mnt;}
+      var pjN=(op.pj||[]).map(function(p){return p.name;}).join(", ")||"—";
+      data.push([i+1,fdate(op.date),op.lib,op.ben,enc,dec,solde,pjN]);
+    });
+    data.push([],[],[],
+      ["","","","TOTAL ENCAISSÉ",totIn,"","",""],
+      ["","","","TOTAL DÉCAISSÉ","",totOut,"",""],
+      ["","","","SOLDE FINAL","","",init+totIn-totOut,""]
+    );
+    var ws=XLSX.utils.aoa_to_sheet(data);
+    ws["!cols"]=[{wch:5},{wch:13},{wch:36},{wch:22},{wch:16},{wch:16},{wch:16},{wch:24}];
+    ws["!merges"]=[{s:{r:0,c:0},e:{r:0,c:7}},{s:{r:1,c:0},e:{r:1,c:7}},{s:{r:2,c:0},e:{r:2,c:7}}];
+    XLSX.utils.book_append_sheet(wb,ws,"REGISTRE");
+    var rc=[
+      ["RÉCAPITULATIF — CAISSE CHANTIER SCI EPSILON"],
+      ["Date : "+ds],[],
+      ["Solde d'ouverture",init],["Total encaissé",totIn],
+      ["Total décaissé",totOut],["Solde final",init+totIn-totOut],[],
+      ["Nb opérations",ops.length],
+      ["Dont recettes",ops.filter(function(o){return o.type==="in";}).length],
+      ["Dont décaissements",ops.filter(function(o){return o.type==="out";}).length]
+    ];
+    var ws2=XLSX.utils.aoa_to_sheet(rc);
+    ws2["!cols"]=[{wch:30},{wch:20}];
+    XLSX.utils.book_append_sheet(wb,ws2,"RÉCAPITULATIF");
+    XLSX.writeFile(wb,"EPS_Caisse_Chantier_"+now.toISOString().split("T")[0]+".xlsx");
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
